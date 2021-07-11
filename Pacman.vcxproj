@@ -142,17 +142,15 @@
     <None Include="field.maka" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="map.c" />
-    <ClCompile Include="misc.c" />
-    <ClCompile Include="str_builder.c" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="misc.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game.h" />
-    <ClInclude Include="map.h" />
-    <ClInclude Include="misc.h" />
-    <ClInclude Include="str_builder.h" />
+    <ClInclude Include="game.hpp" />
+    <ClInclude Include="map.hpp" />
+    <ClInclude Include="misc.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,5 @@
-#include "misc.h"
+#include "misc.hpp"
 #include <Windows.h>
-#include <locale.h>
-#include <stdio.h>
 
 void setup_console() {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -13,5 +11,6 @@ void setup_console() {
 }
 
 void reset_cursor() {
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), (COORD) { 0, 0 });
+	//SetCursorPos(0, 0);
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0, 0 });
 }

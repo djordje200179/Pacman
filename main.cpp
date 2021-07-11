@@ -1,45 +1,45 @@
-#include "game.h"
-#include "misc.h"
-#include <stdbool.h>
+#include "game.hpp"
+#include "misc.hpp"
 #include <Windows.h>
 #include <conio.h>
 
 #define FPS 60
-#define MOVE_RATIO 10
+#define MOVE_RATIO 15
 
 int main(int argc, char** argv) {
 	setup_console();
 
-	Game* game = init_game("field.maka");
+	auto game = Game("field.maka", 60);
 
-	bool game_running = true;
+	auto game_running = true;
 	while(game_running) {
 		static u8 time_counter = 0;
 
-		print_state(game);
+		game.print();
 
 		if(_kbhit()) {
-			switch(getch()) {
+			auto pressed = (char)getch();
+			switch(pressed) {
 			case ESCAPE:
 				game_running = false;
 				break;
 			case ARROW_UP:
-				game->player.direction = UP;
+				game.change_player_direction(Game::Entity::Direction::UP);
 				break;
 			case ARROW_DOWN:
-				game->player.direction = DOWN;
+				game.change_player_direction(Game::Entity::Direction::DOWN);
 				break;
 			case ARROW_LEFT:
-				game->player.direction = LEFT;
+				game.change_player_direction(Game::Entity::Direction::LEFT);
 				break;
 			case ARROW_RIGHT:
-				game->player.direction = RIGHT;
+				game.change_player_direction(Game::Entity::Direction::RIGHT);
 				break;
 			}
 		}
 
 		if(time_counter == FPS / MOVE_RATIO) {
-			update_state(game);
+			game.update();
 
 			time_counter = 0;
 		}
@@ -48,8 +48,6 @@ int main(int argc, char** argv) {
 
 		Sleep(1000 / FPS);
 	}
-
-	end_game(game);
 
 	return 0;
 }
