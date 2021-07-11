@@ -1,5 +1,5 @@
-#ifndef MISC
-#define MISC
+#ifndef MISC_HPP
+#define MISC_HPP
 
 #define ESCAPE 27
 #define ARROW_UP 72
@@ -22,4 +22,4 @@ typedef unsigned int u32;
 void setup_console();
 void reset_cursor();
 
-#endif // MISC
+#endif // MISC_HPP

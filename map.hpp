@@ -1,5 +1,5 @@
-#ifndef MAP
-#define MAP
+#ifndef MAP_HPP
+#define MAP_HPP
 
 #include "misc.hpp"
 #include <string>
@@ -30,4 +30,4 @@ public:
 	Field& get_field(Position position);
 };
 
-#endif // MAP
+#endif // MAP_HPP

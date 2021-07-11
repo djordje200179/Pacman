@@ -3,13 +3,15 @@
 #include <Windows.h>
 #include <conio.h>
 
-#define FPS 60
-#define MOVE_RATIO 15
+const std::string MAP = "field.maka";
+const u8 FPS = 60;
+const u8 MOVE_RATIO = 15;
+const u8 ABILITY_DURATION = 60;
 
 int main(int argc, char** argv) {
 	setup_console();
 
-	auto game = Game("field.maka", 60);
+	auto game = Game(MAP, ABILITY_DURATION);
 	auto game_running = true;
 	while(game_running) {
 		static u8 time_counter = 0;

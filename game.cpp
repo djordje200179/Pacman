@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include <iostream>
 
-Game::Game(std::string map_file_name, u8 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
+Game::Game(const std::string& map_file_name, u8 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
 	set_initial_positions();
 }
 
@@ -74,8 +74,10 @@ void Game::print() const {
 	std::cout << CYAN_COLOR;
 	std::cout << "Score: " << score << '\t';
 	if(ability_counter)
-		std::cout << "Ability: " << (u16)ability_counter << '\t';
-	std::cout << "                 " << '\n' << NO_COLOR;
+		std::cout << "Ability: " << (u16)ability_counter << "  " << '\t';
+	else
+		std::cout << "                 ";
+	std::cout << '\n' << NO_COLOR;
 
 	map.print();
 }

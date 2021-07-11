@@ -1,5 +1,5 @@
-#ifndef GAME
-#define GAME
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include "misc.hpp"
 #include "map.hpp"
@@ -29,11 +29,11 @@ private:
 	void set_initial_positions();
 
 public:
-	Game(std::string map_file_name, u8 ability_duration);
+	Game(const std::string& map_file_name, u8 ability_duration);
 
 	void print() const;
 	void update();
 	void change_player_direction(Entity::Direction direction);
 };
 
-#endif // GAME
+#endif // GAME_HPP

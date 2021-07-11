@@ -11,6 +11,5 @@ void setup_console() {
 }
 
 void reset_cursor() {
-	//SetCursorPos(0, 0);
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0, 0 });
 }
