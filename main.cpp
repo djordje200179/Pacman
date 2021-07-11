@@ -10,15 +10,19 @@ int main(int argc, char** argv) {
 	setup_console();
 
 	auto game = Game("field.maka", 60);
-
 	auto game_running = true;
 	while(game_running) {
 		static u8 time_counter = 0;
+		if(time_counter == FPS / MOVE_RATIO) {
+			game.update();
+			game.print();
 
-		game.print();
+			time_counter = 0;
+		}
+		time_counter++;
 
 		if(_kbhit()) {
-			auto pressed = (char)getch();
+			auto pressed = (char)_getch();
 			switch(pressed) {
 			case ESCAPE:
 				game_running = false;
@@ -37,14 +41,6 @@ int main(int argc, char** argv) {
 				break;
 			}
 		}
-
-		if(time_counter == FPS / MOVE_RATIO) {
-			game.update();
-
-			time_counter = 0;
-		}
-
-		time_counter++;
 
 		Sleep(1000 / FPS);
 	}
