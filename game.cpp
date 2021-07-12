@@ -1,5 +1,7 @@
 #include "game.hpp"
 #include <iostream>
+#include <Windows.h>
+#include <conio.h>
 
 Game::Game(const std::string& map_file_name, u16 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
 	set_initial_positions();
@@ -89,6 +91,43 @@ void Game::update() {
 		ability_counter--;
 }
 
-void Game::change_player_direction(Entity::Direction direction) {
-	player.direction = direction;
+void Game::event_handler() {
+	if(_kbhit()) {
+		auto pressed_key = static_cast<char>(_getch());
+		switch(pressed_key) {
+		case ESCAPE:
+			is_running = false;
+			break;
+		case ARROW_UP:
+			player.direction = Entity::Direction::UP;
+			break;
+		case ARROW_DOWN:
+			player.direction = Entity::Direction::DOWN;
+			break;
+		case ARROW_LEFT:
+			player.direction = Entity::Direction::LEFT;
+			break;
+		case ARROW_RIGHT:
+			player.direction = Entity::Direction::RIGHT;
+			break;
+		}
+	}
+}
+
+void Game::loop(u16 fps, u16 move_ratio) {
+	is_running = true;
+	while(is_running) {
+		static u16 time_counter = 0;
+		if(time_counter == fps / move_ratio) {
+			update();
+			print();
+
+			time_counter = 0;
+		}
+		time_counter++;
+
+		event_handler();
+
+		Sleep(1000 / fps);
+	}
 }

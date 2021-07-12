@@ -18,6 +18,7 @@ public:
 	enum class Field : char {
 		SPACE = ' ', WALL = '#', FOOD = '.', ABILITY = 'O', ENEMY = 'x', PLAYER = '+'
 	};
+
 private:
 	std::vector<std::vector<Field>> fields;
 

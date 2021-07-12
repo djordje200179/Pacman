@@ -15,9 +15,11 @@ public:
 		Map::Position position;
 		Direction direction;
 	};
+
 private:
 	Map map;
 
+	bool is_running = false;
 	u16 score = 0;
 	u16 ability_counter = 0;
 	u16 ability_duration;
@@ -28,12 +30,14 @@ private:
 	void move_player();
 	void set_initial_positions();
 
+	void print() const;
+	void update();
+	void event_handler();
+
 public:
 	Game(const std::string& map_file_name, u16 ability_duration);
 
-	void print() const;
-	void update();
-	void change_player_direction(Entity::Direction direction);
+	void loop(u16 fps, u16 move_ratio);
 };
 
 #endif // GAME_HPP
