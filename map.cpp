@@ -14,7 +14,7 @@ Map::Map(const std::string& file_name) {
 
 		auto new_row = std::vector<Field>();
 		for(auto& field : line)
-			new_row.push_back((Field)field);
+			new_row.push_back(static_cast<Field>(field));
 		fields.push_back(new_row);
 	}
 
@@ -39,7 +39,7 @@ void Map::print() const {
 				break;
 			}
 
-			output << (char)field;
+			output << static_cast<char>(field);
 			output << NO_COLOR;
 		}
 
@@ -50,8 +50,8 @@ void Map::print() const {
 }
 
 Map::Dimensions Map::get_dimensions() const {
-	u8 height = fields.size();
-	u8 width = height > 0 ? fields[0].size() : 0;
+	u16 height = fields.size();
+	u16 width = height > 0 ? fields[0].size() : 0;
 
 	return { height, width };
 }

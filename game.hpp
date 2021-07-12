@@ -8,7 +8,7 @@
 class Game {
 public:
 	struct Entity {
-		enum class Direction {
+		enum class Direction : u8 {
 			STOP = 0, LEFT, RIGHT, UP, DOWN
 		};
 
@@ -19,8 +19,8 @@ private:
 	Map map;
 
 	u16 score = 0;
-	u8 ability_counter = 0;
-	u8 ability_duration;
+	u16 ability_counter = 0;
+	u16 ability_duration;
 
 	Entity player;
 	std::vector<Entity> enemies;
@@ -29,7 +29,7 @@ private:
 	void set_initial_positions();
 
 public:
-	Game(const std::string& map_file_name, u8 ability_duration);
+	Game(const std::string& map_file_name, u16 ability_duration);
 
 	void print() const;
 	void update();

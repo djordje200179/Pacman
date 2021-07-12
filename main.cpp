@@ -4,9 +4,9 @@
 #include <conio.h>
 
 const std::string MAP = "field.maka";
-const u8 FPS = 60;
-const u8 MOVE_RATIO = 15;
-const u8 ABILITY_DURATION = 60;
+const u16 FPS = 60;
+const u16 MOVE_RATIO = 15;
+const u16 ABILITY_DURATION = 60;
 
 int main(int argc, char** argv) {
 	setup_console();
@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 	auto game = Game(MAP, ABILITY_DURATION);
 	auto game_running = true;
 	while(game_running) {
-		static u8 time_counter = 0;
+		static u16 time_counter = 0;
 		if(time_counter == FPS / MOVE_RATIO) {
 			game.update();
 			game.print();
@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 		time_counter++;
 
 		if(_kbhit()) {
-			auto pressed = (char)_getch();
-			switch(pressed) {
+			auto pressed_key = static_cast<char>(_getch());
+			switch(pressed_key) {
 			case ESCAPE:
 				game_running = false;
 				break;

@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include <iostream>
 
-Game::Game(const std::string& map_file_name, u8 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
+Game::Game(const std::string& map_file_name, u16 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
 	set_initial_positions();
 }
 
@@ -54,8 +54,8 @@ void Game::move_player() {
 void Game::set_initial_positions() {
 	auto dimensions = map.get_dimensions();
 
-	for(u8 i = 0; i < dimensions.height; i++)
-		for(u8 j = 0; j < dimensions.width; j++) {
+	for(u16 i = 0; i < dimensions.height; i++)
+		for(u16 j = 0; j < dimensions.width; j++) {
 			auto position = Map::Position { i, j };
 			switch(map.get_field(position)) {
 			case Map::Field::ENEMY:
@@ -74,7 +74,7 @@ void Game::print() const {
 	std::cout << CYAN_COLOR;
 	std::cout << "Score: " << score << '\t';
 	if(ability_counter)
-		std::cout << "Ability: " << (u16)ability_counter << "  " << '\t';
+		std::cout << "Ability: " << ability_counter << "  " << '\t';
 	else
 		std::cout << "                 ";
 	std::cout << '\n' << NO_COLOR;

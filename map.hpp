@@ -8,11 +8,11 @@
 class Map {
 public:
 	struct Position {
-		u8 y, x;
+		u16 y, x;
 	};
 
 	struct Dimensions {
-		u8 height, width;
+		u16 height, width;
 	};
 
 	enum class Field : char {
