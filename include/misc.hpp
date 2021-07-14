@@ -1,7 +1,6 @@
 #ifndef MISC_HPP
 #define MISC_HPP
 
-
 #define RED_COLOR "\033[0;31m"
 #define GREEN_COLOR "\033[0;32m"
 #define YELLOW_COLOR "\033[0;33m"
