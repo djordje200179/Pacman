@@ -17,10 +17,10 @@ int main(int argc, char** argv) {
 	if(parameters["help"].as<bool>())
 		std::cout << options.help() << std::endl;
 	else {
-		auto map_file_name = parameters["map"].as<std::string>();
-		auto ability_duration = parameters["ability"].as<Pacman::u16>();
-		auto fps = parameters["fps"].as<Pacman::u16>();
-		auto move_ratio = parameters["ratio"].as<Pacman::u16>();
+		const auto& map_file_name = parameters["map"].as<std::string>();
+		const auto ability_duration = parameters["ability"].as<Pacman::u16>();
+		const auto fps = parameters["fps"].as<Pacman::u16>();
+		const auto move_ratio = parameters["ratio"].as<Pacman::u16>();
 
 		Pacman::Game game(map_file_name, ability_duration);
 		game.loop(fps, move_ratio);
