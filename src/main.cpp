@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include "misc.hpp"
 
-const std::string MAP = "field.maka";
+const std::string MAP = "res/field.maka";
 const u16 FPS = 60;
 const u16 MOVE_RATIO = 15;
 const u16 ABILITY_DURATION = 60;
