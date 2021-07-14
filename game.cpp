@@ -59,7 +59,9 @@ void Game::move_player() {
 		if(ability_counter) {
 			score += 10;
 
-			enemies.erase(std::find_if(enemies.begin(), enemies.end(), [&](const Entity& enemy) { return enemy.position == player.position; }));
+			enemies.erase(std::find_if(enemies.begin(), enemies.end(), 
+						  [&](const Entity& enemy) { return enemy.position == player.position; })
+			);
 		} else {
 			map.get_field(player.position) = Map::Field::ENEMY;
 			is_running = false;
