@@ -7,7 +7,7 @@ int main(int argc, char** argv) {
 
 	options.add_options()
 		("f,fps", "Frames per second", cxxopts::value<Pacman::u16>()->default_value("60"))
-		("m,map", "Map file name", cxxopts::value<std::string>()->default_value("\"res/field.maka\""))
+		("m,map", "Map file name", cxxopts::value<std::string>()->default_value("res/field.maka"))
 		("r,ratio", "Move ratio", cxxopts::value<Pacman::u16>()->default_value("15"))
 		("a,ability", "Ability duration", cxxopts::value<Pacman::u16>()->default_value("60"))
 		("h,help", "Print parameter info");
