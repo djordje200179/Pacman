@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 namespace Pacman {
 	Map::Map(const std::string& file_name) {
@@ -15,11 +16,9 @@ namespace Pacman {
 
 			std::vector<Field> new_row;
 			new_row.reserve(line.size());
+			std::transform(line.cbegin(), line.cend(), std::back_inserter(new_row), [](char field) { return static_cast<Field>(field); });
 
-			for(auto& field : line)
-				new_row.emplace_back(static_cast<Field>(field));
-
-			fields.push_back(new_row);
+			fields.push_back(std::move(new_row));
 		}
 
 		file.close();
@@ -44,7 +43,14 @@ namespace Pacman {
 				}
 
 				output << static_cast<char>(field);
-				output << NO_COLOR;
+
+				switch(field) {
+				case Field::FOOD:
+				case Field::ABILITY:
+				case Field::ENEMY:
+				case Field::PLAYER:
+					output << NO_COLOR;
+				}
 			}
 
 			output << '\n';
