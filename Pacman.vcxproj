@@ -163,15 +163,15 @@
     <None Include="res\field.maka" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\Pacman\game.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\map.cpp" />
-    <ClCompile Include="src\misc.cpp" />
+    <ClCompile Include="src\Pacman\map.cpp" />
+    <ClCompile Include="src\Pacman\misc.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\game.hpp" />
-    <ClInclude Include="include\map.hpp" />
-    <ClInclude Include="include\misc.hpp" />
+    <ClInclude Include="include\Pacman\game.hpp" />
+    <ClInclude Include="include\Pacman\map.hpp" />
+    <ClInclude Include="include\Pacman\misc.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
