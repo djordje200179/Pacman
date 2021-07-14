@@ -97,7 +97,7 @@ namespace Pacman {
 
 				switch(map.get_field(position)) {
 				case Map::Field::ENEMY:
-					enemies.emplace_back(position, Entity::Direction::UP, Map::Field::SPACE);
+					enemies.emplace_back(position, Entity::Direction::STOP, Map::Field::SPACE);
 					break;
 				case Map::Field::PLAYER:
 					player = { position, Entity::Direction::STOP, Map::Field::SPACE };
