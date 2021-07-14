@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
 		auto game = Pacman::Game(map_file_name, ability_duration);
 		game.loop(fps, move_ratio);
-	}	
+	}
 
 	return 0;
 }
