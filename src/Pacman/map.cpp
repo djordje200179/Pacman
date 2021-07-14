@@ -14,7 +14,7 @@ namespace Pacman {
 				break;
 
 			auto new_row = std::vector<Field>();
-			new_row.reserve(get_dimensions().width);
+			new_row.reserve(line.size());
 			for(auto& field : line)
 				new_row.emplace_back(static_cast<Field>(field));
 
