@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include <iostream>
+#include <algorithm>
 #include <Windows.h>
 #include <conio.h>
 
@@ -7,11 +8,11 @@ Game::Game(const std::string& map_file_name, u16 ability_duration) : ability_dur
 	set_initial_positions();
 }
 
-void Game::move_player() {
-	auto old_position = player.position;
+Map::Field Game::move_entity(Entity& entity) {
+	auto old_position = entity.position;
 	auto new_position = old_position;
 
-	switch(player.direction) {
+	switch(entity.direction) {
 	case Entity::Direction::UP:
 		new_position.y--;
 		break;
@@ -34,22 +35,51 @@ void Game::move_player() {
 	auto& old_field = map.get_field(old_position);
 	auto& new_field = map.get_field(new_position);
 
-	switch(new_field) {
-	case Map::Field::WALL:
-		player.direction = Entity::Direction::STOP;
+	auto old_field_copy = old_field;
+	auto new_field_copy = new_field;
 
+	if(new_field == Map::Field::WALL)
+		entity.direction = Game::Entity::Direction::STOP;
+
+	if(entity.direction != Entity::Direction::STOP) {
+		new_field = old_field_copy;
+		old_field = Map::Field::SPACE;
+
+		entity.position = new_position;
+	}
+
+	return new_field_copy;
+}
+
+void Game::move_player() {
+	auto new_field_type = move_entity(player);
+
+	switch(new_field_type) {
+	case Map::Field::ENEMY:
+		if(ability_counter) {
+			score += 10;
+
+			enemies.erase(std::find_if(enemies.begin(), enemies.end(), [&](const Entity& enemy) { return enemy.position == player.position; }));
+		} else {
+			map.get_field(player.position) = Map::Field::ENEMY;
+			is_running = false;
+		}
 		break;
 	case Map::Field::ABILITY:
 		ability_counter = ability_duration;
+		break;
 	case Map::Field::FOOD:
 		score++;
-	case Map::Field::SPACE:
-		old_field = Map::Field::SPACE;
-		new_field = Map::Field::PLAYER;
-
-		player.position = new_position;
-
 		break;
+	}
+}
+
+void Game::move_enemies() {
+	for(auto& enemy : enemies) {
+		auto new_field_type = move_entity(enemy);
+
+		if(new_field_type == Map::Field::PLAYER)
+			is_running = false;
 	}
 }
 
@@ -86,6 +116,7 @@ void Game::print() const {
 
 void Game::update() {
 	move_player();
+	move_enemies();
 
 	if(ability_counter > 0)
 		ability_counter--;

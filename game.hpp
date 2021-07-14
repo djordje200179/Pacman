@@ -27,7 +27,10 @@ private:
 	Entity player;
 	std::vector<Entity> enemies;
 
+	Map::Field move_entity(Entity& entity);
 	void move_player();
+	void move_enemies();
+
 	void set_initial_positions();
 
 	void print() const;

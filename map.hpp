@@ -9,6 +9,8 @@ class Map {
 public:
 	struct Position {
 		u16 y, x;
+
+		bool operator==(const Position&) const = default;
 	};
 
 	struct Dimensions {
