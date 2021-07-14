@@ -13,8 +13,10 @@ Map::Map(const std::string& file_name) {
 			break;
 
 		auto new_row = std::vector<Field>();
+		new_row.reserve(get_dimensions().width);
 		for(auto& field : line)
-			new_row.push_back(static_cast<Field>(field));
+			new_row.emplace_back(static_cast<Field>(field));
+
 		fields.push_back(new_row);
 	}
 

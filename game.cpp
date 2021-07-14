@@ -61,10 +61,10 @@ void Game::set_initial_positions() {
 			auto position = Map::Position { i, j };
 			switch(map.get_field(position)) {
 			case Map::Field::ENEMY:
-				enemies.push_back({ position, Entity::Direction::STOP });
+				enemies.emplace_back(position, Entity::Direction::STOP);
 				break;
 			case Map::Field::PLAYER:
-				player = { position, Entity::Direction::STOP };
+				player = Entity(position, Entity::Direction::STOP);
 				break;
 			}
 		}
