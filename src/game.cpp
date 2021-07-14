@@ -1,8 +1,8 @@
 #include "game.hpp"
 #include <iostream>
 #include <algorithm>
-#include <Windows.h>
-#include <conio.h>
+#include <thread>
+#include <chrono>
 
 Game::Game(const std::string& map_file_name, u16 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
 	set_initial_positions();
@@ -125,25 +125,22 @@ void Game::update() {
 }
 
 void Game::event_handler() {
-	if(_kbhit()) {
-		auto pressed_key = static_cast<char>(_getch());
-		switch(pressed_key) {
-		case ESCAPE:
-			is_running = false;
-			break;
-		case ARROW_UP:
-			player.direction = Entity::Direction::UP;
-			break;
-		case ARROW_DOWN:
-			player.direction = Entity::Direction::DOWN;
-			break;
-		case ARROW_LEFT:
-			player.direction = Entity::Direction::LEFT;
-			break;
-		case ARROW_RIGHT:
-			player.direction = Entity::Direction::RIGHT;
-			break;
-		}
+	switch(get_pressed_key()) {
+	case Key::ESCAPE:
+		is_running = false;
+		break;
+	case Key::ARROW_UP:
+		player.direction = Entity::Direction::UP;
+		break;
+	case Key::ARROW_DOWN:
+		player.direction = Entity::Direction::DOWN;
+		break;
+	case Key::ARROW_LEFT:
+		player.direction = Entity::Direction::LEFT;
+		break;
+	case Key::ARROW_RIGHT:
+		player.direction = Entity::Direction::RIGHT;
+		break;
 	}
 }
 
@@ -161,6 +158,6 @@ void Game::loop(u16 fps, u16 move_ratio) {
 
 		event_handler();
 
-		Sleep(1000 / fps);
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000 / fps));
 	}
 }
