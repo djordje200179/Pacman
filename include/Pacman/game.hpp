@@ -24,7 +24,7 @@ namespace Pacman {
 		bool is_running = false;
 		u16 score = 0;
 		u16 ability_counter = 0;
-		u16 ability_duration;
+		const u16 ability_duration;
 
 		Entity player;
 		std::vector<Entity> enemies;
