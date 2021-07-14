@@ -6,15 +6,16 @@
 
 namespace Pacman {
 	Map::Map(const std::string& file_name) {
-		auto file = std::ifstream(file_name);
+		std::ifstream file(file_name);
 
 		while(true) {
-			auto line = std::string();
+			std::string line;
 			if(!std::getline(file, line))
 				break;
 
-			auto new_row = std::vector<Field>();
+			std::vector<Field> new_row;
 			new_row.reserve(line.size());
+
 			for(auto& field : line)
 				new_row.emplace_back(static_cast<Field>(field));
 
@@ -25,7 +26,7 @@ namespace Pacman {
 	}
 
 	void Map::print() const {
-		auto output = std::stringstream();
+		std::stringstream output;
 
 		for(const auto& row : fields) {
 			for(const auto& field : row) {

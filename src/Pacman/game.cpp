@@ -44,7 +44,7 @@ namespace Pacman {
 		if(entity.direction != Entity::Direction::STOP) {
 			entity.position = new_position;
 
-			auto old_field_copy = Map::Field(old_field);
+			Map::Field old_field_copy(old_field);
 			old_field = Map::Field(underlying_field);
 			underlying_field = Map::Field(new_field);
 			new_field = old_field_copy;
@@ -93,13 +93,14 @@ namespace Pacman {
 
 		for(u16 i = 0; i < dimensions.height; i++)
 			for(u16 j = 0; j < dimensions.width; j++) {
-				auto position = Map::Position { i, j };
+				Map::Position position { i, j };
+
 				switch(map.get_field(position)) {
 				case Map::Field::ENEMY:
 					enemies.emplace_back(position, Entity::Direction::UP, Map::Field::SPACE);
 					break;
 				case Map::Field::PLAYER:
-					player = Entity(position, Entity::Direction::STOP, Map::Field::SPACE);
+					player = { position, Entity::Direction::STOP, Map::Field::SPACE };
 					break;
 				}
 			}
