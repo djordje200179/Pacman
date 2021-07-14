@@ -79,7 +79,7 @@ void Game::print() const {
 		std::cout << "Ability: " << ability_counter << "  " << '\t';
 	else
 		std::cout << "                 ";
-	std::cout << '\n' << NO_COLOR;
+	std::cout << NO_COLOR << '\n';
 
 	map.print();
 }
