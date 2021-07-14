@@ -16,6 +16,7 @@ namespace Pacman {
 
 			Map::Position position;
 			Direction direction;
+			Map::Field field;
 		};
 
 	private:
@@ -29,7 +30,7 @@ namespace Pacman {
 		Entity player;
 		std::vector<Entity> enemies;
 
-		Map::Field move_entity(Entity& entity);
+		void move_entity(Entity& entity);
 		void move_player();
 		void move_enemies();
 

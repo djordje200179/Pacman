@@ -10,7 +10,7 @@ namespace Pacman {
 		set_initial_positions();
 	}
 
-	Map::Field Game::move_entity(Entity& entity) {
+	void Game::move_entity(Entity& entity) {
 		auto old_position = entity.position;
 		auto new_position = old_position;
 
@@ -34,55 +34,56 @@ namespace Pacman {
 		new_position.x = (new_position.x + dimensions.width) % dimensions.width;
 		new_position.y = (new_position.y + dimensions.height) % dimensions.height;
 
+		auto& underlying_field = entity.field;
 		auto& old_field = map.get_field(old_position);
 		auto& new_field = map.get_field(new_position);
 
-		auto old_field_copy = old_field;
-		auto new_field_copy = new_field;
-
 		if(new_field == Map::Field::WALL)
-			entity.direction = Game::Entity::Direction::STOP;
+			entity.direction = Entity::Direction::STOP;
 
 		if(entity.direction != Entity::Direction::STOP) {
-			new_field = old_field_copy;
-			old_field = Map::Field::SPACE;
-
 			entity.position = new_position;
-		}
 
-		return new_field_copy;
+			auto old_field_copy = Map::Field(old_field);
+			old_field = Map::Field(underlying_field);
+			underlying_field = Map::Field(new_field);
+			new_field = old_field_copy;
+		}
 	}
 
 	void Game::move_player() {
-		auto new_field_type = move_entity(player);
+		move_entity(player);
 
-		switch(new_field_type) {
+		switch(player.field) {
 		case Map::Field::ENEMY:
 			if(ability_counter) {
-				score += 10;
-
 				enemies.erase(std::find_if(enemies.begin(), enemies.end(),
 							  [&](const Entity& enemy) { return enemy.position == player.position; })
 				);
+
+				player.field = Map::Field::SPACE;
 			} else {
-				map.get_field(player.position) = Map::Field::ENEMY;
 				is_running = false;
+
+				map.get_field(player.position) = Map::Field::ENEMY;
 			}
+
 			break;
 		case Map::Field::ABILITY:
 			ability_counter = ability_duration;
-			break;
 		case Map::Field::FOOD:
 			score++;
+			player.field = Map::Field::SPACE;
+
 			break;
 		}
 	}
 
 	void Game::move_enemies() {
 		for(auto& enemy : enemies) {
-			auto new_field_type = move_entity(enemy);
+			move_entity(enemy);
 
-			if(new_field_type == Map::Field::PLAYER)
+			if(enemy.field == Map::Field::PLAYER)
 				is_running = false;
 		}
 	}
@@ -95,10 +96,10 @@ namespace Pacman {
 				auto position = Map::Position { i, j };
 				switch(map.get_field(position)) {
 				case Map::Field::ENEMY:
-					enemies.emplace_back(position, Entity::Direction::STOP);
+					enemies.emplace_back(position, Entity::Direction::UP, Map::Field::SPACE);
 					break;
 				case Map::Field::PLAYER:
-					player = Entity(position, Entity::Direction::STOP);
+					player = Entity(position, Entity::Direction::STOP, Map::Field::SPACE);
 					break;
 				}
 			}
