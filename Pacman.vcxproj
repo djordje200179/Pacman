@@ -169,6 +169,7 @@
     <ClCompile Include="src\Pacman\misc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\cxxopts.hpp" />
     <ClInclude Include="include\Pacman\game.hpp" />
     <ClInclude Include="include\Pacman\map.hpp" />
     <ClInclude Include="include\Pacman\misc.hpp" />

@@ -1,14 +1,30 @@
 #include <Pacman/game.hpp>
+#include <cxxopts.hpp>
 #include <string>
 
-const std::string MAP = "res/field.maka";
-const char FPS = 60;
-const short MOVE_RATIO = 15;
-const short ABILITY_DURATION = 60;
-
 int main(int argc, char** argv) {
-	auto game = Pacman::Game(MAP, ABILITY_DURATION);
-	game.loop(FPS, MOVE_RATIO);
+	auto options = cxxopts::Options("Pacman", "A console Pacman game");
+
+	options.add_options()
+		("f,fps", "Frames per second", cxxopts::value<Pacman::u16>()->default_value("60"))
+		("m,map", "Map file name", cxxopts::value<std::string>()->default_value("\"res/field.maka\""))
+		("r,ratio", "Move ratio", cxxopts::value<Pacman::u16>()->default_value("15"))
+		("a,ability", "Ability duration", cxxopts::value<Pacman::u16>()->default_value("60"))
+		("h,help", "Print parameter info");
+
+	auto parameters = options.parse(argc, argv);
+
+	if(parameters["help"].as<bool>())
+		std::cout << options.help() << std::endl;
+	else {
+		auto map_file_name = parameters["map"].as<std::string>();
+		auto ability_duration = parameters["ability"].as<Pacman::u16>();
+		auto fps = parameters["fps"].as<Pacman::u16>();
+		auto move_ratio = parameters["ratio"].as<Pacman::u16>();
+
+		auto game = Pacman::Game(map_file_name, ability_duration);
+		game.loop(fps, move_ratio);
+	}	
 
 	return 0;
 }
