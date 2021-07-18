@@ -3,6 +3,7 @@
 
 #include "misc.hpp"
 #include <string>
+#include <ostream>
 #include <vector>
 
 namespace Pacman {
@@ -12,6 +13,7 @@ namespace Pacman {
 			u16 y, x;
 
 			bool operator==(const Position&) const = default;
+			friend std::ostream& operator<<(std::ostream& stream, const Position& position);
 		};
 
 		struct Dimensions {
@@ -28,7 +30,7 @@ namespace Pacman {
 	public:
 		Map(const std::string& file_name);
 
-		void print() const;
+		void draw() const;
 
 		Dimensions get_dimensions() const;
 		Field& get_field(Position position);

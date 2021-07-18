@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cxxopts.hpp" />
+    <ClInclude Include="include\olcPixelGameEngine.hpp" />
     <ClInclude Include="include\Pacman\game.hpp" />
     <ClInclude Include="include\Pacman\map.hpp" />
     <ClInclude Include="include\Pacman\misc.hpp" />

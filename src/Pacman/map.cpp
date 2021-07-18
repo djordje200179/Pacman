@@ -1,11 +1,15 @@
 #include "Pacman/map.hpp"
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
 
 namespace Pacman {
+	std::ostream& operator<<(std::ostream& stream, const Map::Position& position) {
+		stream << '(' << position.x << ',' << position.y << ')';
+		return stream;
+	}
+
 	Map::Map(const std::string& file_name) {
 		std::ifstream file(file_name);
 
@@ -24,8 +28,8 @@ namespace Pacman {
 		file.close();
 	}
 
-	void Map::print() const {
-		std::stringstream output;
+	void Map::draw() const {
+		/*std::stringstream output;
 
 		for(const auto& row : fields) {
 			for(const auto& field : row) {
@@ -56,7 +60,7 @@ namespace Pacman {
 			output << '\n';
 		}
 
-		std::cout << output.str();
+		std::cout << output.str();*/
 	}
 
 	Map::Dimensions Map::get_dimensions() const {

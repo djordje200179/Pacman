@@ -5,9 +5,37 @@
 #include <chrono>
 
 namespace Pacman {
-	Game::Game(const std::string& map_file_name, u16 ability_duration) : ability_duration(ability_duration), map(map_file_name) {
-		setup_console();
-		set_initial_positions();
+	std::ostream& operator<<(std::ostream& stream, const Game::Entity::Direction& direction) {
+		using enum Game::Entity::Direction;
+		switch(direction) {
+		case STOP:
+			stream << "STOP";
+			break;
+		case LEFT:
+			stream << "LEFT";
+			break;
+		case RIGHT:
+			stream << "RIGHT";
+			break;
+		case UP:
+			stream << "UP";
+			break;
+		case DOWN:
+			stream << "DOWN";
+			break;
+		}
+		
+		return stream;
+	}
+
+	std::ostream& operator<<(std::ostream& stream, const Game::Entity& entity) {
+		stream << entity.position << ' ' << entity.direction;
+		return stream;
+	}
+
+	Game::Game(const std::string& map_file_name, u16 ability_duration, float fps, u16 update_frequency) :
+		ability_duration(ability_duration), map(map_file_name), target_frame_time(1.0f / fps), update_frequency(update_frequency) {
+		sAppName = "Pacman";
 	}
 
 	void Game::move_entity(Entity& entity) {
@@ -106,7 +134,60 @@ namespace Pacman {
 			}
 	}
 
-	void Game::print() const {
+	void Game::draw() {
+		auto dimensions = map.get_dimensions();
+
+		for(u16 i = 0; i < dimensions.height; i++)
+			for(u16 j = 0; j < dimensions.width; j++) {
+				Map::Position position { i, j };
+				olc::Pixel pixel_color = olc::WHITE;
+				Map::Field& field = map.get_field(position);
+
+				switch(field) {
+				case Map::Field::SPACE:
+					pixel_color = olc::BLACK;
+					break;
+				case Map::Field::WALL:
+					pixel_color = olc::WHITE;
+					break;
+				case Map::Field::FOOD:
+					pixel_color = olc::YELLOW;
+					break;
+				case Map::Field::ABILITY:
+					pixel_color = olc::DARK_YELLOW;
+					break;
+				case Map::Field::ENEMY:
+					pixel_color = olc::RED;
+					break;
+				case Map::Field::PLAYER:
+					pixel_color = olc::DARK_GREEN;
+					break;
+				}
+
+				switch(field) {
+				case Map::Field::FOOD:
+					Draw(j * 5 + 2, i * 5 + 2, pixel_color);
+
+					break;
+				case Map::Field::SPACE:
+				case Map::Field::WALL:
+					for(u8 k = 0; k < 5; k++)
+						for(u8 l = 0; l < 5; l++)
+							Draw(j * 5 + l, i * 5 + k, pixel_color);
+
+					break;
+				case Map::Field::ABILITY:
+				case Map::Field::ENEMY:
+				case Map::Field::PLAYER:
+					for(u8 k = 0; k < 3; k++)
+						for(u8 l = 0; l < 3; l++)
+							Draw(j * 5 + 1 + l, i * 5 + 1 + k, pixel_color);
+
+					break;
+				}
+			}
+				
+		/*
 		reset_cursor();
 
 		std::cout << CYAN_COLOR;
@@ -117,53 +198,77 @@ namespace Pacman {
 			std::cout << "                 ";
 		std::cout << NO_COLOR << '\n';
 
-		map.print();
+		map.draw();
+		*/
 	}
 
 	void Game::update() {
-		move_player();
-		move_enemies();
+		static u16 time_counter = 0;
+		if(time_counter == update_frequency) {
+			move_player();
+			move_enemies();
 
-		if(ability_counter > 0)
-			ability_counter--;
+			if(ability_counter > 0)
+				ability_counter--;
+
+			time_counter = 0;
+		}
+
+		time_counter++;
 	}
 
-	void Game::event_handler() {
-		switch(get_pressed_key()) {
-		case Key::ESCAPE:
+	void Game::handle_events() {
+		if(GetKey(olc::Key::ESCAPE).bPressed)
 			is_running = false;
-			break;
-		case Key::ARROW_UP:
+
+		if(GetKey(olc::Key::UP).bPressed)
 			player.direction = Entity::Direction::UP;
-			break;
-		case Key::ARROW_DOWN:
+
+		if(GetKey(olc::Key::DOWN).bPressed)
 			player.direction = Entity::Direction::DOWN;
-			break;
-		case Key::ARROW_LEFT:
+
+		if(GetKey(olc::Key::LEFT).bPressed)
 			player.direction = Entity::Direction::LEFT;
-			break;
-		case Key::ARROW_RIGHT:
+
+		if(GetKey(olc::Key::RIGHT).bPressed)
 			player.direction = Entity::Direction::RIGHT;
-			break;
-		}
 	}
 
-	void Game::loop(u16 fps, u16 move_ratio) {
+	void Game::log() const {
+		std::cout << player << std::endl;
+	}
+
+	bool Game::OnUserCreate() {
+		set_initial_positions();
 		is_running = true;
-		while(is_running) {
-			static u16 time_counter = 0;
-			if(time_counter == fps / move_ratio) {
-				update();
-				print();
 
-				time_counter = 0;
-			}
-			time_counter++;
+		return true;
+	}
 
-			event_handler();
+	bool Game::OnUserUpdate(float elapsed_time) {
+		if(!is_running)
+			return false;
 
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(1000ms / fps);
+		handle_events();
+
+		static float accumulated_time = 0.0f;
+
+		accumulated_time += elapsed_time;
+		if(accumulated_time >= target_frame_time) {
+			accumulated_time -= target_frame_time;
+
+			log();
+			update();
+			draw();
+
+			return true;
 		}
+		else
+			return true;
+	}
+
+	void Game::start() {
+		Construct(240, 160, 4, 4);
+		Start();
 	}
 }
