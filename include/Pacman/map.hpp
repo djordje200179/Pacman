@@ -30,8 +30,6 @@ namespace Pacman {
 	public:
 		Map(const std::string& file_name);
 
-		void draw() const;
-
 		Dimensions get_dimensions() const;
 		Field& get_field(Position position);
 	};

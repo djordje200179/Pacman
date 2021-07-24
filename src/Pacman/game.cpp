@@ -186,20 +186,6 @@ namespace Pacman {
 					break;
 				}
 			}
-				
-		/*
-		reset_cursor();
-
-		std::cout << CYAN_COLOR;
-		std::cout << "Score: " << score << '\t';
-		if(ability_counter)
-			std::cout << "Ability: " << ability_counter << "  " << '\t';
-		else
-			std::cout << "                 ";
-		std::cout << NO_COLOR << '\n';
-
-		map.draw();
-		*/
 	}
 
 	void Game::update() {
