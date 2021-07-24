@@ -6,21 +6,21 @@
 
 namespace Pacman {
 	std::ostream& operator<<(std::ostream& stream, const Game::Entity::Direction& direction) {
-		using enum Game::Entity::Direction;
+		using Dir = Game::Entity::Direction;
 		switch(direction) {
-		case STOP:
+		case Dir::STOP:
 			stream << "STOP";
 			break;
-		case LEFT:
+		case Dir::LEFT:
 			stream << "LEFT";
 			break;
-		case RIGHT:
+		case Dir::RIGHT:
 			stream << "RIGHT";
 			break;
-		case UP:
+		case Dir::UP:
 			stream << "UP";
 			break;
-		case DOWN:
+		case Dir::DOWN:
 			stream << "DOWN";
 			break;
 		}
@@ -44,17 +44,18 @@ namespace Pacman {
 		auto new_position = old_position;
 		new_position += dimensions;
 
+		using Dir = Game::Entity::Direction;
 		switch(direction) {
-		case Entity::Direction::UP:
+		case Dir::UP:
 			new_position.y--;
 			break;
-		case Entity::Direction::DOWN:
+		case Dir::DOWN:
 			new_position.y++;
 			break;
-		case Entity::Direction::LEFT:
+		case Dir::LEFT:
 			new_position.x--;
 			break;
-		case Entity::Direction::RIGHT:
+		case Dir::RIGHT:
 			new_position.x++;
 			break;
 		}
@@ -91,26 +92,27 @@ namespace Pacman {
 	void Game::move_player() {
 		move_entity(player);
 
+		using Field = Map::Field;
 		switch(player.field) {
-		case Map::Field::ENEMY:
+		case Field::ENEMY:
 			if(ability_counter) {
 				enemies.erase(std::find_if(enemies.begin(), enemies.end(),
 							  [&](const Entity& enemy) { return enemy.position == player.position; })
 				);
 
-				player.field = Map::Field::SPACE;
+				player.field = Field::SPACE;
 			} else {
 				is_running = false;
 
-				map.get_field(player.position) = Map::Field::ENEMY;
+				map.get_field(player.position) = Field::ENEMY;
 			}
 
 			break;
-		case Map::Field::ABILITY:
+		case Field::ABILITY:
 			ability_counter = ability_duration;
-		case Map::Field::FOOD:
+		case Field::FOOD:
 			score++;
-			player.field = Map::Field::SPACE;
+			player.field = Field::SPACE;
 
 			break;
 		}
@@ -152,42 +154,43 @@ namespace Pacman {
 				olc::Pixel pixel_color = olc::WHITE;
 				Map::Field& field = map.get_field(position);
 
+				using Field = Map::Field;
 				switch(field) {
-				case Map::Field::SPACE:
+				case Field::SPACE:
 					pixel_color = olc::BLACK;
 					break;
-				case Map::Field::WALL:
+				case Field::WALL:
 					pixel_color = olc::WHITE;
 					break;
-				case Map::Field::FOOD:
+				case Field::FOOD:
 					pixel_color = olc::YELLOW;
 					break;
-				case Map::Field::ABILITY:
+				case Field::ABILITY:
 					pixel_color = olc::DARK_YELLOW;
 					break;
-				case Map::Field::ENEMY:
+				case Field::ENEMY:
 					pixel_color = ability_counter ? olc::BLUE : olc::RED;
 					break;
-				case Map::Field::PLAYER:
+				case Field::PLAYER:
 					pixel_color = olc::DARK_GREEN;
 					break;
 				}
 
 				switch(field) {
-				case Map::Field::FOOD:
+				case Field::FOOD:
 					Draw(j * 5 + 2, i * 5 + 2, pixel_color);
 
 					break;
-				case Map::Field::SPACE:
-				case Map::Field::WALL:
+				case Field::SPACE:
+				case Field::WALL:
 					for(u8 k = 0; k < 5; k++)
 						for(u8 l = 0; l < 5; l++)
 							Draw(j * 5 + l, i * 5 + k, pixel_color);
 
 					break;
-				case Map::Field::ABILITY:
-				case Map::Field::ENEMY:
-				case Map::Field::PLAYER:
+				case Field::ABILITY:
+				case Field::ENEMY:
+				case Field::PLAYER:
 					for(u8 k = 0; k < 3; k++)
 						for(u8 l = 0; l < 3; l++)
 							Draw(j * 5 + 1 + l, i * 5 + 1 + k, pixel_color);
@@ -216,17 +219,18 @@ namespace Pacman {
 		if(GetKey(olc::Key::ESCAPE).bPressed)
 			is_running = false;
 
+		using Dir = Game::Entity::Direction;
 		if(GetKey(olc::Key::UP).bPressed)
-			player.direction = Entity::Direction::UP;
+			player.direction = Dir::UP;
 
 		if(GetKey(olc::Key::DOWN).bPressed)
-			player.direction = Entity::Direction::DOWN;
+			player.direction = Dir::DOWN;
 
 		if(GetKey(olc::Key::LEFT).bPressed)
-			player.direction = Entity::Direction::LEFT;
+			player.direction = Dir::LEFT;
 
 		if(GetKey(olc::Key::RIGHT).bPressed)
-			player.direction = Entity::Direction::RIGHT;
+			player.direction = Dir::RIGHT;
 	}
 
 	void Game::log() const {
@@ -255,11 +259,9 @@ namespace Pacman {
 			log();
 			update();
 			draw();
-
-			return true;
 		}
-		else
-			return true;
+
+		return true;
 	}
 
 	void Game::start() {
