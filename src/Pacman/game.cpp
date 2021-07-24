@@ -166,7 +166,7 @@ namespace Pacman {
 					pixel_color = olc::DARK_YELLOW;
 					break;
 				case Map::Field::ENEMY:
-					pixel_color = olc::RED;
+					pixel_color = ability_counter ? olc::BLUE : olc::RED;
 					break;
 				case Map::Field::PLAYER:
 					pixel_color = olc::DARK_GREEN;
