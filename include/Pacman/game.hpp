@@ -1,5 +1,4 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#pragma once
 
 #include "misc.hpp"
 #include "map.hpp"
@@ -57,5 +56,3 @@ namespace Pacman {
 		void start();
 	};
 }
-
-#endif // GAME_HPP

@@ -1,5 +1,4 @@
-#ifndef MAP_HPP
-#define MAP_HPP
+#pragma once
 
 #include "misc.hpp"
 #include <string>
@@ -36,5 +35,3 @@ namespace Pacman {
 		Field& get_field(Position position);
 	};
 }
-
-#endif // MAP_HPP
