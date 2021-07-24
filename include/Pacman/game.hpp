@@ -36,6 +36,7 @@ namespace Pacman {
 		u16 ability_counter = 0;
 		bool is_running = false;
 
+		Map::Position generate_new_position(Map::Position old_position, Entity::Direction direction);
 		void move_entity(Entity& entity);
 		void move_player();
 		void move_enemies();

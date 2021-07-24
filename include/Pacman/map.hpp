@@ -9,15 +9,17 @@
 namespace Pacman {
 	class Map {
 	public:
+		struct Dimensions {
+			u16 height, width;
+		};
+
 		struct Position {
 			u16 y, x;
 
-			bool operator==(const Position&) const = default;
+			bool operator==(const Position& rhs) const = default;
+			Position& operator+=(const Dimensions& rhs);
+			Position& operator%=(const Dimensions& rhs);
 			friend std::ostream& operator<<(std::ostream& stream, const Position& position);
-		};
-
-		struct Dimensions {
-			u16 height, width;
 		};
 
 		enum class Field : char {

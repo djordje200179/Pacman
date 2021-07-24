@@ -5,6 +5,20 @@
 #include <algorithm>
 
 namespace Pacman {
+	Map::Position& Map::Position::operator+=(const Map::Dimensions& rhs) {
+		y += rhs.height;
+		x += rhs.width;
+
+		return *this;
+	}
+
+	Map::Position& Map::Position::operator%=(const Map::Dimensions& rhs) {
+		y %= rhs.height;
+		x %= rhs.width;
+
+		return *this;
+	}
+
 	std::ostream& operator<<(std::ostream& stream, const Map::Position& position) {
 		stream << '(' << position.x << ',' << position.y << ')';
 		return stream;

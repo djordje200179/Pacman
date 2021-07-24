@@ -38,11 +38,13 @@ namespace Pacman {
 		sAppName = "Pacman";
 	}
 
-	void Game::move_entity(Entity& entity) {
-		auto old_position = entity.position;
+	Map::Position Game::generate_new_position(Map::Position old_position, Entity::Direction direction) {
+		auto dimensions = map.get_dimensions();
+		
 		auto new_position = old_position;
+		new_position += dimensions;
 
-		switch(entity.direction) {
+		switch(direction) {
 		case Entity::Direction::UP:
 			new_position.y--;
 			break;
@@ -57,10 +59,17 @@ namespace Pacman {
 			break;
 		}
 
-		auto dimensions = map.get_dimensions();
+		new_position %= dimensions;
 
-		new_position.x = (new_position.x + dimensions.width) % dimensions.width;
-		new_position.y = (new_position.y + dimensions.height) % dimensions.height;
+		return new_position;
+	}
+
+	void Game::move_entity(Entity& entity) {
+		if(entity.direction == Entity::Direction::STOP)
+			return;
+
+		auto old_position = entity.position;
+		auto new_position = generate_new_position(old_position, entity.direction);
 
 		auto& underlying_field = entity.field;
 		auto& old_field = map.get_field(old_position);
