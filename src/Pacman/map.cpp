@@ -32,28 +32,28 @@ namespace Pacman {
 			if(!std::getline(file, line))
 				break;
 
-			static std::vector<Field> new_row;
-			new_row.reserve(line.size());
-			std::transform(line.cbegin(), line.cend(), std::back_inserter(new_row), [](char field) { return static_cast<Field>(field); });
+			if(fields.size() == 0)
+				row_size = line.length();
 
-			fields.push_back(std::move(new_row));
+			for(auto raw_field : line)
+				fields.push_back(static_cast<Field>(raw_field));
 		}
 
 		file.close();
 	}
 
 	Dimensions Map::get_dimensions() const {
-		u16 height = fields.size();
-		u16 width = height > 0 ? fields[0].size() : 0;
+		u16 height = fields.size() / row_size;
+		u16 width = row_size;
 
 		return { height, width };
 	}
 
 	Field Map::get_field(Position position) const {
-		return fields[position.y][position.x];
+		return fields[position.y * row_size + position.x];
 	}
 
 	void Map::set_field(Position position, Field new_field) {
-		fields[position.y][position.x] = new_field;
+		fields[position.y * row_size + position.x] = new_field;
 	}
 }

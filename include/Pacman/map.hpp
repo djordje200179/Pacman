@@ -32,6 +32,7 @@ namespace Pacman {
 		void set_field(Position position, Field new_field);
 
 	private:
-		std::vector<std::vector<Field>> fields;
+		u16 row_size;
+		std::vector<Field> fields;
 	};
 }
