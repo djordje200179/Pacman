@@ -43,9 +43,9 @@ namespace Pacman {
 		auto old_position = entity.position;
 		auto new_position = generate_new_position(old_position, entity.direction);
 
-		auto& underlying_field = entity.field;
-		auto& old_field = map.get_field(old_position);
-		auto& new_field = map.get_field(new_position);
+		auto underlying_field = entity.field;
+		auto old_field = map.get_field(old_position);
+		auto new_field = map.get_field(new_position);
 
 		if(new_field == Field::WALL)
 			entity.direction = Direction::STOP;
@@ -53,10 +53,9 @@ namespace Pacman {
 		if(entity.direction != Direction::STOP) {
 			entity.position = new_position;
 
-			Field old_field_copy(old_field);
-			old_field = Field(underlying_field);
-			underlying_field = Field(new_field);
-			new_field = old_field_copy;
+			map.set_field(old_position, underlying_field);
+			map.set_field(new_position, old_field);
+			entity.field = new_field;
 		}
 	}
 
@@ -74,7 +73,7 @@ namespace Pacman {
 			} else {
 				is_running = false;
 
-				map.get_field(player.position) = Field::ENEMY;
+				map.set_field(player.position, Field::ENEMY);
 			}
 
 			break;
@@ -120,9 +119,9 @@ namespace Pacman {
 
 		for(u16 i = 0; i < dimensions.height; i++)
 			for(u16 j = 0; j < dimensions.width; j++) {
-				Position position { i, j };
-				olc::Pixel pixel_color = olc::WHITE;
-				Field& field = map.get_field(position);
+				auto position = Position { i, j };
+				auto pixel_color = olc::WHITE;
+				auto field = map.get_field(position);
 
 				switch(field) {
 				case Field::SPACE:

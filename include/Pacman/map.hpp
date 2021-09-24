@@ -28,7 +28,8 @@ namespace Pacman {
 		Map(const std::string& file_name);
 
 		Dimensions get_dimensions() const;
-		Field& get_field(Position position);
+		Field get_field(Position position);
+		void set_field(Position position, Field new_field);
 
 	private:
 		std::vector<std::vector<Field>> fields;

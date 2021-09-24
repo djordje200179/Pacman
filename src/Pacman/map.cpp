@@ -25,14 +25,14 @@ namespace Pacman {
 	}
 
 	Map::Map(const std::string& file_name) {
-		std::ifstream file(file_name);
+		auto file = std::ifstream(file_name);
 
 		while(true) {
-			std::string line;
+			static auto line = std::string();
 			if(!std::getline(file, line))
 				break;
 
-			std::vector<Field> new_row;
+			static std::vector<Field> new_row;
 			new_row.reserve(line.size());
 			std::transform(line.cbegin(), line.cend(), std::back_inserter(new_row), [](char field) { return static_cast<Field>(field); });
 
@@ -49,7 +49,11 @@ namespace Pacman {
 		return { height, width };
 	}
 
-	Field& Map::get_field(Position position) {
+	Field Map::get_field(Position position) {
 		return fields[position.y][position.x];
+	}
+
+	void Map::set_field(Position position, Field new_field) {
+		fields[position.y][position.x] = new_field;
 	}
 }
