@@ -2,6 +2,7 @@
 
 #include "misc.hpp"
 #include "map.hpp"
+#include "entity.hpp"
 #include <vector>
 #include <string>
 #include <olcPixelGameEngine.hpp>
@@ -10,17 +11,9 @@
 namespace Pacman {
 	class Game : private olc::PixelGameEngine {
 	public:
-		struct Entity {
-			enum class Direction : u8 {
-				STOP = 0, LEFT, RIGHT, UP, DOWN
-			};
+		Game(const std::string& map_file_name, u16 ability_duration, float fps, u16 update_frequency);
 
-			Map::Position position;
-			Direction direction;
-			Map::Field field;
-
-			friend std::ostream& operator<<(std::ostream& stream, const Entity& entity);
-		};
+		void start();
 
 	private:
 		const float target_frame_time;
@@ -35,7 +28,7 @@ namespace Pacman {
 		u16 ability_counter = 0;
 		bool is_running = false;
 
-		Map::Position generate_new_position(Map::Position old_position, Entity::Direction direction);
+		Position generate_new_position(Position old_position, Direction direction);
 		void move_entity(Entity& entity);
 		void move_player();
 		void move_enemies();
@@ -49,10 +42,5 @@ namespace Pacman {
 
 		bool OnUserCreate() override;
 		bool OnUserUpdate(float elapsed_time) override;
-
-	public:
-		Game(const std::string& map_file_name, u16 ability_duration, float fps, u16 update_frequency);
-
-		void start();
 	};
 }

@@ -163,12 +163,13 @@
     <None Include="res\field.maka" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Pacman\entity.cpp" />
     <ClCompile Include="src\Pacman\game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Pacman\map.cpp" />
-    <ClCompile Include="src\Pacman\misc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Pacman\entity.hpp" />
     <ClInclude Include="include\cxxopts.hpp" />
     <ClInclude Include="include\olcPixelGameEngine.hpp" />
     <ClInclude Include="include\Pacman\game.hpp" />

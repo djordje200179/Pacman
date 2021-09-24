@@ -5,7 +5,7 @@
 #include <string>
 
 int main(int argc, char** argv) {
-	cxxopts::Options options("Pacman", "A console Pacman game");
+	auto options = cxxopts::Options("Pacman", "A console Pacman game");
 
 	options.add_options()
 		("f,fps", "Frames per second", cxxopts::value<Pacman::u16>()->default_value("60"))
@@ -19,12 +19,12 @@ int main(int argc, char** argv) {
 	if(parameters["help"].as<bool>())
 		std::cout << options.help() << std::endl;
 	else {
-		const auto& map_file_name = parameters["map"].as<std::string>();
+		const auto map_file_name = parameters["map"].as<std::string>();
 		const auto ability_duration = parameters["ability"].as<Pacman::u16>();
 		const auto fps = parameters["fps"].as<Pacman::u16>();
 		const auto frequency = parameters["frequency"].as<Pacman::u16>();
 
-		Pacman::Game game(map_file_name, ability_duration, fps, frequency);
+		auto game = Pacman::Game(map_file_name, ability_duration, fps, frequency);
 		game.start();
 	}
 

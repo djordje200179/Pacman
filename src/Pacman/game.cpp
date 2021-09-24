@@ -5,57 +5,28 @@
 #include <chrono>
 
 namespace Pacman {
-	std::ostream& operator<<(std::ostream& stream, const Game::Entity::Direction& direction) {
-		using Dir = Game::Entity::Direction;
-		switch(direction) {
-		case Dir::STOP:
-			stream << "STOP";
-			break;
-		case Dir::LEFT:
-			stream << "LEFT";
-			break;
-		case Dir::RIGHT:
-			stream << "RIGHT";
-			break;
-		case Dir::UP:
-			stream << "UP";
-			break;
-		case Dir::DOWN:
-			stream << "DOWN";
-			break;
-		}
-		
-		return stream;
-	}
-
-	std::ostream& operator<<(std::ostream& stream, const Game::Entity& entity) {
-		stream << entity.position << ' ' << entity.direction;
-		return stream;
-	}
-
 	Game::Game(const std::string& map_file_name, u16 ability_duration, float fps, u16 update_frequency) :
 		ability_duration(ability_duration), map(map_file_name), target_frame_time(1.0f / fps), update_frequency(update_frequency) {
 		sAppName = "Pacman";
 	}
 
-	Map::Position Game::generate_new_position(Map::Position old_position, Entity::Direction direction) {
+	Position Game::generate_new_position(Position old_position, Direction direction) {
 		auto dimensions = map.get_dimensions();
 		
 		auto new_position = old_position;
 		new_position += dimensions;
 
-		using Dir = Game::Entity::Direction;
 		switch(direction) {
-		case Dir::UP:
+		case Direction::UP:
 			new_position.y--;
 			break;
-		case Dir::DOWN:
+		case Direction::DOWN:
 			new_position.y++;
 			break;
-		case Dir::LEFT:
+		case Direction::LEFT:
 			new_position.x--;
 			break;
-		case Dir::RIGHT:
+		case Direction::RIGHT:
 			new_position.x++;
 			break;
 		}
@@ -66,7 +37,7 @@ namespace Pacman {
 	}
 
 	void Game::move_entity(Entity& entity) {
-		if(entity.direction == Entity::Direction::STOP)
+		if(entity.direction == Direction::STOP)
 			return;
 
 		auto old_position = entity.position;
@@ -76,15 +47,15 @@ namespace Pacman {
 		auto& old_field = map.get_field(old_position);
 		auto& new_field = map.get_field(new_position);
 
-		if(new_field == Map::Field::WALL)
-			entity.direction = Entity::Direction::STOP;
+		if(new_field == Field::WALL)
+			entity.direction = Direction::STOP;
 
-		if(entity.direction != Entity::Direction::STOP) {
+		if(entity.direction != Direction::STOP) {
 			entity.position = new_position;
 
-			Map::Field old_field_copy(old_field);
-			old_field = Map::Field(underlying_field);
-			underlying_field = Map::Field(new_field);
+			Field old_field_copy(old_field);
+			old_field = Field(underlying_field);
+			underlying_field = Field(new_field);
 			new_field = old_field_copy;
 		}
 	}
@@ -92,7 +63,6 @@ namespace Pacman {
 	void Game::move_player() {
 		move_entity(player);
 
-		using Field = Map::Field;
 		switch(player.field) {
 		case Field::ENEMY:
 			if(ability_counter) {
@@ -122,7 +92,7 @@ namespace Pacman {
 		for(auto& enemy : enemies) {
 			move_entity(enemy);
 
-			if(enemy.field == Map::Field::PLAYER)
+			if(enemy.field == Field::PLAYER)
 				is_running = false;
 		}
 	}
@@ -132,14 +102,14 @@ namespace Pacman {
 
 		for(u16 i = 0; i < dimensions.height; i++)
 			for(u16 j = 0; j < dimensions.width; j++) {
-				Map::Position position { i, j };
+				Position position { i, j };
 
 				switch(map.get_field(position)) {
-				case Map::Field::ENEMY:
-					enemies.emplace_back(position, Entity::Direction::STOP, Map::Field::SPACE);
+				case Field::ENEMY:
+					enemies.emplace_back(position, Direction::STOP, Field::SPACE);
 					break;
-				case Map::Field::PLAYER:
-					player = { position, Entity::Direction::STOP, Map::Field::SPACE };
+				case Field::PLAYER:
+					player = { position, Direction::STOP, Field::SPACE };
 					break;
 				}
 			}
@@ -150,11 +120,10 @@ namespace Pacman {
 
 		for(u16 i = 0; i < dimensions.height; i++)
 			for(u16 j = 0; j < dimensions.width; j++) {
-				Map::Position position { i, j };
+				Position position { i, j };
 				olc::Pixel pixel_color = olc::WHITE;
-				Map::Field& field = map.get_field(position);
+				Field& field = map.get_field(position);
 
-				using Field = Map::Field;
 				switch(field) {
 				case Field::SPACE:
 					pixel_color = olc::BLACK;
@@ -219,18 +188,17 @@ namespace Pacman {
 		if(GetKey(olc::Key::ESCAPE).bPressed)
 			is_running = false;
 
-		using Dir = Game::Entity::Direction;
 		if(GetKey(olc::Key::UP).bPressed)
-			player.direction = Dir::UP;
+			player.direction = Direction::UP;
 
 		if(GetKey(olc::Key::DOWN).bPressed)
-			player.direction = Dir::DOWN;
+			player.direction = Direction::DOWN;
 
 		if(GetKey(olc::Key::LEFT).bPressed)
-			player.direction = Dir::LEFT;
+			player.direction = Direction::LEFT;
 
 		if(GetKey(olc::Key::RIGHT).bPressed)
-			player.direction = Dir::RIGHT;
+			player.direction = Direction::RIGHT;
 	}
 
 	void Game::log() const {

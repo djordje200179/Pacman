@@ -5,21 +5,21 @@
 #include <algorithm>
 
 namespace Pacman {
-	Map::Position& Map::Position::operator+=(const Map::Dimensions& rhs) {
+	Position& Position::operator+=(const Dimensions& rhs) {
 		y += rhs.height;
 		x += rhs.width;
 
 		return *this;
 	}
 
-	Map::Position& Map::Position::operator%=(const Map::Dimensions& rhs) {
+	Position& Position::operator%=(const Dimensions& rhs) {
 		y %= rhs.height;
 		x %= rhs.width;
 
 		return *this;
 	}
 
-	std::ostream& operator<<(std::ostream& stream, const Map::Position& position) {
+	std::ostream& operator<<(std::ostream& stream, const Position& position) {
 		stream << '(' << position.x << ',' << position.y << ')';
 		return stream;
 	}
@@ -42,14 +42,14 @@ namespace Pacman {
 		file.close();
 	}
 
-	Map::Dimensions Map::get_dimensions() const {
+	Dimensions Map::get_dimensions() const {
 		u16 height = fields.size();
 		u16 width = height > 0 ? fields[0].size() : 0;
 
 		return { height, width };
 	}
 
-	Map::Field& Map::get_field(Position position) {
+	Field& Map::get_field(Position position) {
 		return fields[position.y][position.x];
 	}
 }

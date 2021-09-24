@@ -24,7 +24,7 @@
     <ClCompile Include="src\Pacman\map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pacman\misc.cpp">
+    <ClCompile Include="src\Pacman\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\olcPixelGameEngine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Pacman\entity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
