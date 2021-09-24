@@ -17,7 +17,7 @@ namespace Pacman {
 	struct Position {
 		u16 y, x;
 
-		bool operator==(const Position& rhs) const = default;
+		friend bool operator==(const Position& lhs, const Position& rhs) = default;
 		Position& operator+=(const Dimensions& rhs);
 		Position& operator%=(const Dimensions& rhs);
 		friend std::ostream& operator<<(std::ostream& stream, const Position& position);
@@ -28,7 +28,7 @@ namespace Pacman {
 		Map(const std::string& file_name);
 
 		Dimensions get_dimensions() const;
-		Field get_field(Position position);
+		Field get_field(Position position) const;
 		void set_field(Position position, Field new_field);
 
 	private:

@@ -10,7 +10,7 @@ namespace Pacman {
 		sAppName = "Pacman";
 	}
 
-	Position Game::generate_new_position(Position old_position, Direction direction) {
+	Position Game::generate_new_position(Position old_position, Direction direction) const {
 		auto dimensions = map.get_dimensions();
 		
 		auto new_position = old_position;
@@ -114,7 +114,7 @@ namespace Pacman {
 			}
 	}
 
-	void Game::draw() {
+	void Game::draw() const {
 		auto dimensions = map.get_dimensions();
 
 		for(u16 i = 0; i < dimensions.height; i++)

@@ -49,7 +49,7 @@ namespace Pacman {
 		return { height, width };
 	}
 
-	Field Map::get_field(Position position) {
+	Field Map::get_field(Position position) const {
 		return fields[position.y][position.x];
 	}
 

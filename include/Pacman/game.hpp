@@ -28,14 +28,14 @@ namespace Pacman {
 		u16 ability_counter = 0;
 		bool is_running = false;
 
-		Position generate_new_position(Position old_position, Direction direction);
+		Position generate_new_position(Position old_position, Direction direction) const;
 		void move_entity(Entity& entity);
 		void move_player();
 		void move_enemies();
 
 		void set_initial_positions();
 
-		void draw();
+		void draw() const;
 		void update();
 		void handle_events();
 		void log() const;
