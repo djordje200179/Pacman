@@ -93,7 +93,7 @@ namespace Pacman {
 
 		for(u16 i = 0; i < dimensions.height; i++)
 			for(u16 j = 0; j < dimensions.width; j++) {
-				Map::Position position { i, j };
+				auto position = Map::Position { i, j };
 
 				switch(map.get_field(position)) {
 				case Map::Field::ENEMY:
