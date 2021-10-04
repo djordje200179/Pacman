@@ -13,27 +13,27 @@ namespace Pacman {
 	Position Game::generateNewPosition(Position oldPosition, Direction direction) const {
 		auto dimensions = map.getDimensions();
 		
-		auto new_position = oldPosition;
-		new_position += dimensions;
+		auto newPosition = oldPosition;
+		newPosition += dimensions;
 
 		switch(direction) {
 		case Direction::UP:
-			new_position.y--;
+			newPosition.y--;
 			break;
 		case Direction::DOWN:
-			new_position.y++;
+			newPosition.y++;
 			break;
 		case Direction::LEFT:
-			new_position.x--;
+			newPosition.x--;
 			break;
 		case Direction::RIGHT:
-			new_position.x++;
+			newPosition.x++;
 			break;
 		}
 
-		new_position %= dimensions;
+		newPosition %= dimensions;
 
-		return new_position;
+		return newPosition;
 	}
 
 	void Game::moveEntity(Entity& entity) {
