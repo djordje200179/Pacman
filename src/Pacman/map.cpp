@@ -24,8 +24,8 @@ namespace Pacman {
 		return stream;
 	}
 
-	Map::Map(const std::string& file_name) {
-		auto file = std::ifstream(file_name);
+	Map::Map(const std::string& fileName) {
+		auto file = std::ifstream(fileName);
 
 		while(true) {
 			static auto line = std::string();
@@ -33,27 +33,27 @@ namespace Pacman {
 				break;
 
 			if(fields.size() == 0)
-				row_size = line.length();
+				rowSize = line.length();
 
-			for(auto raw_field : line)
-				fields.push_back(static_cast<Field>(raw_field));
+			for(auto rawField : line)
+				fields.push_back(static_cast<Field>(rawField));
 		}
 
 		file.close();
 	}
 
-	Dimensions Map::get_dimensions() const {
-		u16 height = fields.size() / row_size;
-		u16 width = row_size;
+	Dimensions Map::getDimensions() const {
+		u16 height = fields.size() / rowSize;
+		u16 width = rowSize;
 
 		return { height, width };
 	}
 
-	Field Map::get_field(Position position) const {
-		return fields[position.y * row_size + position.x];
+	Field Map::getField(Position position) const {
+		return fields[position.y * rowSize + position.x];
 	}
 
-	void Map::set_field(Position position, Field new_field) {
-		fields[position.y * row_size + position.x] = new_field;
+	void Map::setField(Position position, Field newField) {
+		fields[position.y * rowSize + position.x] = newField;
 	}
 }

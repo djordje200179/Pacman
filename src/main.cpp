@@ -19,12 +19,12 @@ int main(int argc, char** argv) {
 	if(parameters["help"].as<bool>())
 		std::cout << options.help() << std::endl;
 	else {
-		const auto map_file_name = parameters["map"].as<std::string>();
-		const auto ability_duration = parameters["ability"].as<Pacman::u16>();
+		const auto mapFileName = parameters["map"].as<std::string>();
+		const auto abilityDuration = parameters["ability"].as<Pacman::u16>();
 		const auto fps = parameters["fps"].as<Pacman::u16>();
 		const auto frequency = parameters["frequency"].as<Pacman::u16>();
 
-		auto game = Pacman::Game(map_file_name, ability_duration, fps, frequency);
+		auto game = Pacman::Game(mapFileName, abilityDuration, fps, frequency);
 		game.start();
 	}
 

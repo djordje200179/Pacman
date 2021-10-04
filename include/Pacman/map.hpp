@@ -25,14 +25,14 @@ namespace Pacman {
 
 	class Map {
 	public:
-		Map(const std::string& file_name);
+		Map(const std::string& fileName);
 
-		Dimensions get_dimensions() const;
-		Field get_field(Position position) const;
-		void set_field(Position position, Field new_field);
+		Dimensions getDimensions() const;
+		Field getField(Position position) const;
+		void setField(Position position, Field newField);
 
 	private:
-		u16 row_size;
+		u16 rowSize;
 		std::vector<Field> fields;
 	};
 }

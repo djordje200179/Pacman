@@ -11,36 +11,36 @@
 namespace Pacman {
 	class Game : private olc::PixelGameEngine {
 	public:
-		Game(const std::string& map_file_name, u16 ability_duration, float fps, u16 update_frequency);
+		Game(const std::string& mapFileName, u16 abilityDuration, float fps, u16 updateFrequency);
 
 		void start();
 
 	private:
-		const float target_frame_time;
-		const u16 ability_duration;
-		const u16 update_frequency;
+		const float targetFrameTime;
+		const u16 abilityDuration;
+		const u16 updateFrequency;
 
 		Map map;
 		Entity player;
 		std::vector<Entity> enemies;
 
 		u16 score = 0;
-		u16 ability_counter = 0;
-		bool is_running = false;
+		u16 abilityCounter = 0;
+		bool isRunning = false;
 
-		Position generate_new_position(Position old_position, Direction direction) const;
-		void move_entity(Entity& entity);
-		void move_player();
-		void move_enemies();
+		Position generateNewPosition(Position oldPosition, Direction direction) const;
+		void moveEntity(Entity& entity);
+		void movePlayer();
+		void moveEnemies();
 
-		void set_initial_positions();
+		void setInitialPositions();
 
 		void draw() const;
 		void update();
-		void handle_events();
+		void handleEvents();
 		void log() const;
 
 		bool OnUserCreate() override;
-		bool OnUserUpdate(float elapsed_time) override;
+		bool OnUserUpdate(float elapsedTime) override;
 	};
 }
