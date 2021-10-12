@@ -5,234 +5,234 @@
 #include <chrono>
 
 namespace Pacman {
-	Game::Game(const std::string& map_file_name, u16 ability_duration, float fps, u16 update_frequency) :
-		ability_duration(ability_duration), map(map_file_name), target_frame_time(1.0f / fps), update_frequency(update_frequency) {
-		sAppName = "Pacman";
+Game::Game(const std::string& mapFileName, u16 abilityDuration, float fps, u16 updateFrequency) :
+	abilityDuration(abilityDuration), map(mapFileName), targetFrameTime(1.0f / fps), updateFrequency(updateFrequency) {
+	sAppName = "Pacman";
+}
+
+Position Game::generateNewPosition(Position oldPosition, Direction direction) const {
+	auto dimensions = map.getDimensions();
+
+	auto newPosition = oldPosition;
+	newPosition += dimensions;
+
+	switch(direction) {
+	case Direction::UP:
+		newPosition.y--;
+		break;
+	case Direction::DOWN:
+		newPosition.y++;
+		break;
+	case Direction::LEFT:
+		newPosition.x--;
+		break;
+	case Direction::RIGHT:
+		newPosition.x++;
+		break;
 	}
 
-	Position Game::generate_new_position(Position old_position, Direction direction) const {
-		auto dimensions = map.get_dimensions();
-		
-		auto new_position = old_position;
-		new_position += dimensions;
+	newPosition %= dimensions;
 
-		switch(direction) {
-		case Direction::UP:
-			new_position.y--;
-			break;
-		case Direction::DOWN:
-			new_position.y++;
-			break;
-		case Direction::LEFT:
-			new_position.x--;
-			break;
-		case Direction::RIGHT:
-			new_position.x++;
-			break;
-		}
+	return newPosition;
+}
 
-		new_position %= dimensions;
+void Game::moveEntity(Entity& entity) {
+	if(entity.direction == Direction::STOP)
+		return;
 
-		return new_position;
+	auto oldPosition = entity.position;
+	auto newPosition = generateNewPosition(oldPosition, entity.direction);
+
+	auto underlyingField = entity.field;
+	auto oldField = map.getField(oldPosition);
+	auto newField = map.getField(newPosition);
+
+	if(newField == Field::WALL)
+		entity.direction = Direction::STOP;
+
+	if(entity.direction != Direction::STOP) {
+		entity.position = newPosition;
+
+		map.setField(oldPosition, underlyingField);
+		map.setField(newPosition, oldField);
+		entity.field = newField;
 	}
+}
 
-	void Game::move_entity(Entity& entity) {
-		if(entity.direction == Direction::STOP)
-			return;
+void Game::movePlayer() {
+	moveEntity(player);
 
-		auto old_position = entity.position;
-		auto new_position = generate_new_position(old_position, entity.direction);
+	switch(player.field) {
+	case Field::ENEMY:
+		if(abilityCounter) {
+			enemies.erase(std::find_if(enemies.begin(), enemies.end(),
+						  [&](const Entity& enemy) { return enemy.position == player.position; })
+			);
 
-		auto underlying_field = entity.field;
-		auto old_field = map.get_field(old_position);
-		auto new_field = map.get_field(new_position);
-
-		if(new_field == Field::WALL)
-			entity.direction = Direction::STOP;
-
-		if(entity.direction != Direction::STOP) {
-			entity.position = new_position;
-
-			map.set_field(old_position, underlying_field);
-			map.set_field(new_position, old_field);
-			entity.field = new_field;
-		}
-	}
-
-	void Game::move_player() {
-		move_entity(player);
-
-		switch(player.field) {
-		case Field::ENEMY:
-			if(ability_counter) {
-				enemies.erase(std::find_if(enemies.begin(), enemies.end(),
-							  [&](const Entity& enemy) { return enemy.position == player.position; })
-				);
-
-				player.field = Field::SPACE;
-			} else {
-				is_running = false;
-
-				map.set_field(player.position, Field::ENEMY);
-			}
-
-			break;
-		case Field::ABILITY:
-			ability_counter = ability_duration;
-		case Field::FOOD:
-			score++;
 			player.field = Field::SPACE;
+		} else {
+			isRunning = false;
 
-			break;
+			map.setField(player.position, Field::ENEMY);
 		}
+
+		break;
+	case Field::ABILITY:
+		abilityCounter = abilityDuration;
+	case Field::FOOD:
+		score++;
+		player.field = Field::SPACE;
+
+		break;
 	}
+}
 
-	void Game::move_enemies() {
-		for(auto& enemy : enemies) {
-			move_entity(enemy);
+void Game::moveEnemies() {
+	for(auto& enemy : enemies) {
+		moveEntity(enemy);
 
-			if(enemy.field == Field::PLAYER)
-				is_running = false;
-		}
+		if(enemy.field == Field::PLAYER)
+			isRunning = false;
 	}
+}
 
-	void Game::set_initial_positions() {
-		auto dimensions = map.get_dimensions();
+void Game::setInitialPositions() {
+	auto dimensions = map.getDimensions();
 
-		for(u16 i = 0; i < dimensions.height; i++)
-			for(u16 j = 0; j < dimensions.width; j++) {
-				Position position { i, j };
+	for(u16 i = 0; i < dimensions.height; i++)
+		for(u16 j = 0; j < dimensions.width; j++) {
+			Position position { i, j };
 
-				switch(map.get_field(position)) {
-				case Field::ENEMY:
-					enemies.emplace_back(position, Direction::STOP, Field::SPACE);
-					break;
-				case Field::PLAYER:
-					player = { position, Direction::STOP, Field::SPACE };
-					break;
-				}
+			switch(map.getField(position)) {
+			case Field::ENEMY:
+				enemies.emplace_back(position, Direction::STOP, Field::SPACE);
+				break;
+			case Field::PLAYER:
+				player = { position, Direction::STOP, Field::SPACE };
+				break;
 			}
-	}
+		}
+}
 
-	void Game::draw() const {
-		auto dimensions = map.get_dimensions();
+void Game::draw() const {
+	auto dimensions = map.getDimensions();
 
-		for(u16 i = 0; i < dimensions.height; i++)
-			for(u16 j = 0; j < dimensions.width; j++) {
-				auto position = Position { i, j };
-				auto pixel_color = olc::WHITE;
-				auto field = map.get_field(position);
+	for(u16 i = 0; i < dimensions.height; i++)
+		for(u16 j = 0; j < dimensions.width; j++) {
+			auto position = Position { i, j };
+			auto pixelColor = olc::WHITE;
+			auto field = map.getField(position);
 
-				switch(field) {
-				case Field::SPACE:
-					pixel_color = olc::BLACK;
-					break;
-				case Field::WALL:
-					pixel_color = olc::WHITE;
-					break;
-				case Field::FOOD:
-					pixel_color = olc::YELLOW;
-					break;
-				case Field::ABILITY:
-					pixel_color = olc::DARK_YELLOW;
-					break;
-				case Field::ENEMY:
-					pixel_color = ability_counter ? olc::BLUE : olc::RED;
-					break;
-				case Field::PLAYER:
-					pixel_color = olc::DARK_GREEN;
-					break;
-				}
-
-				switch(field) {
-				case Field::FOOD:
-					Draw(j * 5 + 2, i * 5 + 2, pixel_color);
-
-					break;
-				case Field::SPACE:
-				case Field::WALL:
-					for(u8 k = 0; k < 5; k++)
-						for(u8 l = 0; l < 5; l++)
-							Draw(j * 5 + l, i * 5 + k, pixel_color);
-
-					break;
-				case Field::ABILITY:
-				case Field::ENEMY:
-				case Field::PLAYER:
-					for(u8 k = 0; k < 3; k++)
-						for(u8 l = 0; l < 3; l++)
-							Draw(j * 5 + 1 + l, i * 5 + 1 + k, pixel_color);
-
-					break;
-				}
+			switch(field) {
+			case Field::SPACE:
+				pixelColor = olc::BLACK;
+				break;
+			case Field::WALL:
+				pixelColor = olc::WHITE;
+				break;
+			case Field::FOOD:
+				pixelColor = olc::YELLOW;
+				break;
+			case Field::ABILITY:
+				pixelColor = olc::DARK_YELLOW;
+				break;
+			case Field::ENEMY:
+				pixelColor = abilityCounter ? olc::BLUE : olc::RED;
+				break;
+			case Field::PLAYER:
+				pixelColor = olc::DARK_GREEN;
+				break;
 			}
-	}
 
-	void Game::update() {
-		static u16 time_counter = 0;
-		if(time_counter == update_frequency) {
-			move_player();
-			move_enemies();
+			switch(field) {
+			case Field::FOOD:
+				Draw(j * 5 + 2, i * 5 + 2, pixelColor);
 
-			if(ability_counter > 0)
-				ability_counter--;
+				break;
+			case Field::SPACE:
+			case Field::WALL:
+				for(u8 k = 0; k < 5; k++)
+					for(u8 l = 0; l < 5; l++)
+						Draw(j * 5 + l, i * 5 + k, pixelColor);
 
-			time_counter = 0;
+				break;
+			case Field::ABILITY:
+			case Field::ENEMY:
+			case Field::PLAYER:
+				for(u8 k = 0; k < 3; k++)
+					for(u8 l = 0; l < 3; l++)
+						Draw(j * 5 + 1 + l, i * 5 + 1 + k, pixelColor);
+
+				break;
+			}
 		}
+}
 
-		time_counter++;
+void Game::update() {
+	static u16 timeCounter = 0;
+	if(timeCounter == updateFrequency) {
+		movePlayer();
+		moveEnemies();
+
+		if(abilityCounter > 0)
+			abilityCounter--;
+
+		timeCounter = 0;
 	}
 
-	void Game::handle_events() {
-		if(GetKey(olc::Key::ESCAPE).bPressed)
-			is_running = false;
+	timeCounter++;
+}
 
-		if(GetKey(olc::Key::UP).bPressed)
-			player.direction = Direction::UP;
+void Game::handleEvents() {
+	if(GetKey(olc::Key::ESCAPE).bPressed)
+		isRunning = false;
 
-		if(GetKey(olc::Key::DOWN).bPressed)
-			player.direction = Direction::DOWN;
+	if(GetKey(olc::Key::UP).bPressed)
+		player.direction = Direction::UP;
 
-		if(GetKey(olc::Key::LEFT).bPressed)
-			player.direction = Direction::LEFT;
+	if(GetKey(olc::Key::DOWN).bPressed)
+		player.direction = Direction::DOWN;
 
-		if(GetKey(olc::Key::RIGHT).bPressed)
-			player.direction = Direction::RIGHT;
+	if(GetKey(olc::Key::LEFT).bPressed)
+		player.direction = Direction::LEFT;
+
+	if(GetKey(olc::Key::RIGHT).bPressed)
+		player.direction = Direction::RIGHT;
+}
+
+void Game::log() const {
+	std::cout << player << std::endl;
+}
+
+bool Game::OnUserCreate() {
+	setInitialPositions();
+	isRunning = true;
+
+	return true;
+}
+
+bool Game::OnUserUpdate(float elapsedTime) {
+	if(!isRunning)
+		return false;
+
+	handleEvents();
+
+	static float accumulatedTime = 0.0f;
+
+	accumulatedTime += elapsedTime;
+	if(accumulatedTime >= targetFrameTime) {
+		accumulatedTime -= targetFrameTime;
+
+		log();
+		update();
+		draw();
 	}
 
-	void Game::log() const {
-		std::cout << player << std::endl;
-	}
+	return true;
+}
 
-	bool Game::OnUserCreate() {
-		set_initial_positions();
-		is_running = true;
-
-		return true;
-	}
-
-	bool Game::OnUserUpdate(float elapsed_time) {
-		if(!is_running)
-			return false;
-
-		handle_events();
-
-		static float accumulated_time = 0.0f;
-
-		accumulated_time += elapsed_time;
-		if(accumulated_time >= target_frame_time) {
-			accumulated_time -= target_frame_time;
-
-			log();
-			update();
-			draw();
-		}
-
-		return true;
-	}
-
-	void Game::start() {
-		Construct(240, 160, 4, 4);
-		Start();
-	}
+void Game::start() {
+	Construct(240, 160, 4, 4);
+	Start();
+}
 }

@@ -5,55 +5,55 @@
 #include <algorithm>
 
 namespace Pacman {
-	Position& Position::operator+=(const Dimensions& rhs) {
-		y += rhs.height;
-		x += rhs.width;
+Position& Position::operator+=(const Dimensions& rhs) {
+	y += rhs.height;
+	x += rhs.width;
 
-		return *this;
+	return *this;
+}
+
+Position& Position::operator%=(const Dimensions& rhs) {
+	y %= rhs.height;
+	x %= rhs.width;
+
+	return *this;
+}
+
+std::ostream& operator<<(std::ostream& stream, const Position& position) {
+	stream << '(' << position.x << ',' << position.y << ')';
+	return stream;
+}
+
+Map::Map(const std::string& fileName) {
+	auto file = std::ifstream(fileName);
+
+	while(true) {
+		static auto line = std::string();
+		if(!std::getline(file, line))
+			break;
+
+		if(fields.size() == 0)
+			rowSize = line.length();
+
+		for(auto rawField : line)
+			fields.push_back(static_cast<Field>(rawField));
 	}
 
-	Position& Position::operator%=(const Dimensions& rhs) {
-		y %= rhs.height;
-		x %= rhs.width;
+	file.close();
+}
 
-		return *this;
-	}
+Dimensions Map::getDimensions() const {
+	u16 height = fields.size() / rowSize;
+	u16 width = rowSize;
 
-	std::ostream& operator<<(std::ostream& stream, const Position& position) {
-		stream << '(' << position.x << ',' << position.y << ')';
-		return stream;
-	}
+	return { height, width };
+}
 
-	Map::Map(const std::string& file_name) {
-		auto file = std::ifstream(file_name);
+Field Map::getField(Position position) const {
+	return fields[position.y * rowSize + position.x];
+}
 
-		while(true) {
-			static auto line = std::string();
-			if(!std::getline(file, line))
-				break;
-
-			if(fields.size() == 0)
-				row_size = line.length();
-
-			for(auto raw_field : line)
-				fields.push_back(static_cast<Field>(raw_field));
-		}
-
-		file.close();
-	}
-
-	Dimensions Map::get_dimensions() const {
-		u16 height = fields.size() / row_size;
-		u16 width = row_size;
-
-		return { height, width };
-	}
-
-	Field Map::get_field(Position position) const {
-		return fields[position.y * row_size + position.x];
-	}
-
-	void Map::set_field(Position position, Field new_field) {
-		fields[position.y * row_size + position.x] = new_field;
-	}
+void Map::setField(Position position, Field newField) {
+	fields[position.y * rowSize + position.x] = newField;
+}
 }

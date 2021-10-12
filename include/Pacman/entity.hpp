@@ -4,15 +4,15 @@
 #include "map.hpp"
 
 namespace Pacman {
-	enum class Direction : u8 {
-		STOP = 0, LEFT, RIGHT, UP, DOWN
-	};
+enum class Direction : u8 {
+	STOP = 0, LEFT, RIGHT, UP, DOWN
+};
 
-	struct Entity {
-		Position position;
-		Direction direction;
-		Field field;
+struct Entity {
+	Position position;
+	Direction direction;
+	Field field;
 
-		friend std::ostream& operator<<(std::ostream& stream, const Entity& entity);
-	};
+	friend std::ostream& operator<<(std::ostream& stream, const Entity& entity);
+};
 }
