@@ -5,7 +5,7 @@
 #include <string>
 
 int main(int argc, char** argv) {
-	auto options = cxxopts::Options("Pacman", "A console Pacman game");
+	cxxopts::Options options("Pacman", "A console Pacman game");
 
 	options.add_options()
 		("f,fps", "Frames per second", cxxopts::value<Pacman::u16>()->default_value("60"))
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 		const auto fps = parameters["fps"].as<Pacman::u16>();
 		const auto frequency = parameters["frequency"].as<Pacman::u16>();
 
-		auto game = Pacman::Game(mapFileName, abilityDuration, fps, frequency);
+		Pacman::Game game(mapFileName, abilityDuration, fps, frequency);
 		game.start();
 	}
 

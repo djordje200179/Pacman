@@ -25,10 +25,10 @@ std::ostream& operator<<(std::ostream& stream, const Position& position) {
 }
 
 Map::Map(const std::string& fileName) {
-	auto file = std::ifstream(fileName);
+	std::ifstream file(fileName);
 
 	while(true) {
-		static auto line = std::string();
+		static std::string line;
 		if(!std::getline(file, line))
 			break;
 
